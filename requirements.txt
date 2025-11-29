@@ -1,0 +1,9 @@
+uvicorn
+fastapi
+starlette
+jinja2
+python-dateutil
+python-multipart
+python-jose
+passlib
+bcrypt
