@@ -1,0 +1,285 @@
+@font-face {
+    font-family: 'league-spartan';
+    src: url('../static/fonts/LeagueSpartan.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+button{
+    color: #878787;
+    background-color: #dddddd;
+    padding: 0.5em 1em;
+    border-radius: 0.3em;
+    border: none;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.1s;
+}
+button:hover{
+    color: #cbcbcb;
+    background-color: #444444;
+    cursor: pointer;
+}
+input[type=submit]{
+    color: #277685;
+    background-color: #5cb9d3;
+    padding: 0.5em 1em;
+    border-radius: 0.3em;
+    border: none;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.1s;
+}
+input[type=submit]:hover{
+    color: #53c5dc;
+    background-color: #144551;
+    cursor: pointer;
+}
+#player-container{
+    position: fixed;
+    display: flex;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+#player-container>audio{
+    width: 100%;
+}
+*{
+    font-family: 'league-spartan', serif;
+    box-sizing: border-box;
+}
+.navbar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 30px;
+}
+.nav-left, .nav-center, .nav-right {
+    flex: 1;
+    height: 100%;
+}
+.navbar div a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #878787;
+    background-color: #dddddd;
+    height: 100%;
+    width: 100px;
+    border-radius: 0.3em;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.1s;
+    cursor: pointer;
+}
+.navbar div img{
+    height: 100%;
+    margin: auto 0;
+    cursor: pointer;
+}
+.navbar div a:hover{
+    color: #cbcbcb;
+    background-color: #444444;
+}
+.navbar div .selected{
+    color: #cbcbcb;
+    background-color: #444444;
+}
+.nav-center {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.nav-right {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    position: relative;
+}
+body{
+    padding: 0;
+    margin: 30px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.container{
+    /*margin-top: 40px;*/
+}
+.library-content{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 30px;
+}
+.library-sub-content{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+.libraries-list{
+
+}
+.libraries-list ul li a{
+    color: #aaaaaa;
+    text-decoration: none;
+    font-size: 2em;
+    font-weight: 500;
+}
+.libraries-list ul li .selected{
+    color: #3d3d3d;
+}
+.libraries-list ul li a:hover{
+    color: #3d3d3d;
+    cursor: pointer;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.user-profile-container{
+    display: flex;
+    gap: 30px;
+}
+.user-info-container{
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    width: 150px;
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    overflow: hidden;
+}
+.image-profile{
+    height: 150px;
+    width: 150px;
+    border-radius: 0.3em;
+}
+.user-profile-user-name{
+    font-size: 2em;
+}
+.user-tracks-container{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    border-radius: 0.3em;
+    overflow: hidden;
+    gap: 10px;
+}
+.user-profile-filter-bar div{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.user-info-container ul li a{
+    color: #aaaaaa;
+    text-decoration: none;
+    font-size: 1.3em;
+    font-weight: 500;
+}
+.user-info-container ul li .selected{
+    color: #3d3d3d;
+}
+.user-info-container ul li a:hover{
+    color: #3d3d3d;
+}
+.user-profile-filter-bar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 30px;
+}
+.track-container-right>div>img{
+    height: 20px;
+    padding: 0;
+    aspect-ratio: 1;
+}
+.track-container-right>div>img:hover{
+    cursor: pointer;
+}
+.track-container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 60px;
+    border-radius: 0.3em;
+    overflow: hidden;
+    background-color: #efefef;
+    background-image: linear-gradient(to top, #efefef, #ffffff);
+}
+/*.track-container-left>div>a:first-child{
+    color: black;
+    font-size: 1.3em;
+}*/
+.menu-box-user{
+    position: absolute;
+    flex-direction: column;
+    top: 40px;
+    background-color: #dddddd;
+    width: 300px;
+    border-radius: 0.3em;
+    padding: 20px;
+    gap: 10px;
+}
+.track-container-left>a, .track-container-left>div>a:last-child{
+    color: #878787;
+    font-size: 1em;
+}
+.contributors-text>a{
+    color: #878787;
+    font-size: 1em;
+    cursor: pointer;
+}
+.track-title{
+    color: black;
+    font-size: 1.3em;
+}
+.track-cover-image{
+    height: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 0.3em;
+}
+.track-play-button{
+    border-radius: 100%;
+    aspect-ratio: 1;
+    margin: 10px;
+    padding: 10px;
+}
+.track-play-button>img{
+    width: 100%;
+    height: 100%;
+}
+.track-container>div{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 10px;
+}
+.track-container-left{
+    display: flex;
+    flex-direction: column;
+}
+.track-container-right{
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+}
+.track-container-right>div{
+    justify-content: right;
+    display: flex;
+    gap: 5px;
+}
+.track-container-right>div>button{
+    height: 30px;
+    padding: 0;
+    aspect-ratio: 1;
+}

@@ -1,0 +1,43 @@
+{% block library_content %}
+    {% for track in liked_tracks %}
+        <div class="track-container">
+            {% if track['TrackCoverPath'] == "" %}
+            <img class="track-cover-image" src="../static/images/default_track_cover.png" class="image-track" alt="Track cover">
+            {% else %}
+            <img class="track-cover-image" src="../media/track_covers/{{ track['TrackCoverPath'] }}" class="image-track" alt="Track cover">
+            {% endif %}<br>
+            <button class="track-play-button" onclick="playSong('/stream/{{ track['AudioFilePath'] }}', {{ track['TrackID'] }})">
+                <img
+                        src="{{ request.url_for('static', path='images/play.svg') }}"
+                        id="play-button-image-{{ track['TrackID'] }}"
+                        class="play-button-image"
+                        onload="initializePlayButton('play-button-image-{{ track['TrackID'] }}', '{{track['AudioFilePath']}}')"
+                >
+            </button>
+            <div>
+                <div class="track-container-left">
+                    <div>
+                        <a class="track-title" href="/tracks/{{ track['TrackID'] }}">{{ track["Title"] }}</a>
+                        <a>● Single ● 2:23</a>
+                    </div>
+                    <div class="contributors-text">
+                    {% for c in track.Contributors %}
+                        <a hx-get="/user/{{ c['UserID'] }}" hx-target="#content" hx-push-url="true">{{ c["Username"] }}</a>
+                        <a> {% if not loop.last %} ● {% endif %} </a>
+                    {% endfor %}
+                    </div>
+                </div>
+                <div class="track-container-right">
+                    <div>
+                        {% if track.liked == 'true' %}
+                        <img src="{{ request.url_for('static', path='images/liked.svg') }}" id="button_liked_{{ track['TrackID'] }}" onclick="toggleLikedTrack({{ track["TrackID"] }})">
+                        {% else %}
+                        <img src="{{ request.url_for('static', path='images/unliked.svg') }}" id="button_liked_{{ track['TrackID'] }}" onclick="toggleLikedTrack({{ track["TrackID"] }})">
+                        {% endif %}
+                    </div>
+                    <a>{{ track["UploadDate"] }}</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+{% endblock %}

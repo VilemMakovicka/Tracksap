@@ -1,0 +1,16 @@
+{% block administration_content %}
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td><a href="/user/{{ user['ID'] }}">{{ user["ID"] }}</a></td>
+        <td><a href="/user/{{ user['ID'] }}">{{ user["Username"] }}</a></td>
+        <td><a href="/user/{{ user['ID'] }}">{{ user["Email"] }}</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

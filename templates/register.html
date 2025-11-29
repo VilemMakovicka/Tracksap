@@ -1,0 +1,9 @@
+{% block content %}
+<a href="/login">Login into an existing account</a>
+<form action="/register" method="POST">
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="text" name="email" placeholder="Email">
+    <input type="password" name="password" placeholder="Password" required>
+    <input type="submit" value="Register">
+</form>
+{% endblock %}

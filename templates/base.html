@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}Aplikace{% endblock %}</title>
+    <link rel="stylesheet" href="{{ request.url_for('static', path='style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ request.url_for('static', path='icon.ico') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+        function playSong(url, track_id) {
+            const player = document.getElementById("audio-player");
+
+            let button_images = Array.from(document.getElementsByClassName("play-button-image"));
+            button_images.forEach((element) =>
+                element.src = "{{ request.url_for('static', path='images/play.svg') }}");
+
+            if(player.src != "" && player.src.includes(url)) {
+                if (player.paused) {
+                    player.play();
+                    document.getElementById("play-button-image-" + track_id).src = "{{ request.url_for('static', path='images/pause.svg') }}";
+                } else {
+                    player.pause();
+                    document.getElementById("play-button-image-" + track_id).src = "{{ request.url_for('static', path='images/play.svg') }}";
+                }
+            }
+            else {
+                player.src = url;
+                player.play();
+                document.getElementById("play-button-image-" + track_id).src = "{{ request.url_for('static', path='images/pause.svg') }}";
+            }
+        }
+
+        function openLogin(){
+            let login_form = document.getElementsByClassName("menu-box-user")[0];
+            if(login_form.style.display.toString() == "none") login_form.style.display = "flex";
+            else login_form.style.display = "none";
+        }
+
+        async function toggleLikedTrack(track_id) {
+            let current_url = document.getElementById("button_liked_" + track_id).src;
+            if(current_url == "{{ request.url_for('static', path='images/liked.svg') }}") {
+                document.getElementById("button_liked_" + track_id).src = "{{ request.url_for('static', path='images/unliked.svg') }}";
+                await fetch(`/unlike/${track_id}`, { method: "POST" });
+            }
+            else{
+                document.getElementById("button_liked_" + track_id).src = "{{ request.url_for('static', path='images/liked.svg') }}";
+                await fetch(`/like/${track_id}`, { method: "POST" });
+            }
+        }
+
+        function initializePlayButton(element_id, track_path) {
+            const player = document.getElementById("audio-player");
+            if(player.src.includes(track_path.trim())) {
+                document.getElementById(element_id).src = "{{ request.url_for('static', path='images/pause.svg') }}";
+            }
+        }
+    </script>
+</head>
+<body>
+    <script>
+        document.body.addEventListener("htmx:historyRestore", function(evt) {
+            const fragment = evt.detail.content;
+            document.querySelector("#content").innerHTML = fragment;
+        });
+    </script>
+    {% set current_user = get_current_user(request) %}
+    <header>
+        <nav class="navbar">
+            <div class="nav-left">
+                <img src="{{ request.url_for('static', path='images/headerlogo.png') }}">
+            </div>
+            {% if current_user %}
+            <div class="nav-center">
+                <a class="{% if '/library' in request.path %}selected{% endif %}"
+                   hx-get="/library/liked" hx-target="#content" hx-push-url="true">LIBRARY</a>
+                <a class="{% if request.path == '/discover' %}selected{% endif %}"
+                   hx-get="/discover" hx-target="#content" hx-push-url="true">DISCOVER</a>
+            </div>
+            {% endif %}
+            <div class="nav-right">
+                <img src="{{ request.url_for('static', path='images/search.svg') }}">
+                <img src="{{ request.url_for('static', path='images/user.svg') }}" onclick="openLogin()">
+                <div class="menu-box-user" style="display: none;">
+                    {% if not current_user %}
+                    <script>
+                        function exchangeElementVisibility(target_id, this_id){
+                            document.getElementById(this_id).style.display="none";
+                            document.getElementById(target_id).style.display="flex";
+                        }
+                    </script>
+
+                    <form
+                            action="/login"
+                            method="POST"
+                            style="display: flex; flex-direction: column;"
+                            id="login-form-small"
+                    >
+                        <button onclick="exchangeElementVisibility('registration-form-small', 'login-form-small')">Create a new account</button>
+                        <input type="text" name="email" placeholder="Email" required>
+                        <input type="password" name="password" placeholder="Password" required>
+                        <input type="submit" value="Login">
+                    </form>
+                    <form action="/register"
+                          method="POST"
+                          style="display: none; flex-direction: column;"
+                          id="registration-form-small"
+                    >
+                        <button onclick="exchangeElementVisibility('login-form-small', 'registration-form-small')">Login with an existing account</button>
+                        <input type="text" name="username" placeholder="Username" required>
+                        <input type="text" name="email" placeholder="Email" required>
+                        <input type="password" name="password" placeholder="Password" required>
+                        <input type="submit" value="Register">
+                    </form>
+                    {% else %}
+                    <script> async function openprofile(profile_id) { window.location.href = "/user/" + profile_id; } </script>
+                    <button onclick="openprofile({{ current_user.id }})">My profile</button>
+                    <script> async function logout() { await fetch(`/logout`, { method: "POST" }); location.reload();} </script>
+                    <button onclick="logout()">Logout</button>
+                    {% endif %}
+                </div>
+
+            </div>
+        </nav>
+    </header>
+    <div id="player-container">
+    <audio id="audio-player" controls></audio>
+    </div>
+    <div class="container" id="content">
+        {% include content_template %}
+    </div>
+    <script src="https://unpkg.com/htmx.org"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <title>Aplikace</title>
+  <link rel="stylesheet" href="../static/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-left">
+                <img src="../static/images/headerlogo.png">
+            </div>
+
+            <div class="nav-center">
+                <a href="/library">LIBRARY</a>
+                <a href="/discover">DISCOVER</a>
+            </div>
+
+            <div class="nav-right">
+                <img src="../static/images/search.svg">
+                <img src="../static/images/user.svg">
+            </div>
+        </nav>
+    </header>
+    <main class="container">
+        <a>Create a new account</a>
+        <form action="/login" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="submit" value="Login">
+        </form>
+    </main>
+</body>
+</html>

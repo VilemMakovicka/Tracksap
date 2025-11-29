@@ -1,0 +1,13 @@
+{% block content %}
+<div class="library-content">
+    <div class="libraries-list">
+        <ul>
+            <li><a class="{% if request.path == '/administration/users' %}selected{% endif %}" href="/administration/users">Users</a></li>
+            <li><a class="{% if request.path == '/administration/tracks' %}selected{% endif %}" href="/administration/tracks">Tracks</a></li>
+        </ul>
+    </div>
+    <div class="library-content">
+    {% block administration_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

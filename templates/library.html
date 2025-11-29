@@ -1,0 +1,23 @@
+{% block content %}
+{% set current_user = get_current_user(request) %}
+{% if not current_user %}
+<script>window.location.href = "/"</script>
+{% endif %}
+<div class="library-content">
+    <div class="libraries-list">
+        <ul>
+            <li><a
+                    class="{% if request.path == '/library/liked' %}selected{% endif %}"
+                    hx-get="/library/liked" hx-target="#library-sub-content" hx-push-url="true"
+            >Liked</a></li>
+            <li><a
+                    class="{% if request.path == '/library/playlists' %}selected{% endif %}"
+                    hx-get="/library/playlists" hx-target="#library-sub-content" hx-push-url="true"
+            >Playlists</a></li>
+        </ul>
+    </div>
+    <div class="library-sub-content" id="library-sub-content">
+    {% include library_content %}
+    </div>
+</div>
+{% endblock %}
