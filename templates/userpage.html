@@ -1,4 +1,5 @@
 {% block content %}
+{% if not user %}<script>window.location.href = "/error/usernotfound"</script>{% endif %}
 {% set current_user = get_current_user(request) %}
 <div class="user-profile-container">
     <div class="user-info-container">
@@ -23,11 +24,8 @@
         </div>
         {% for track in tracks %}
         <div class="track-container">
-            {% if track['TrackCoverPath'] == "" %}
-            <img class="track-cover-image" src="../static/images/default_track_cover.png" class="image-track" alt="Track cover">
-            {% else %}
-            <img class="track-cover-image" src="../media/track_covers/{{ track['TrackCoverPath'] }}" class="image-track" alt="Track cover">
-            {% endif %}<br>
+            {% set cover_image_src = "../static/images/default_track_cover.png" if track['TrackCoverPath'] == "" else ("../media/track_covers/" ~ track['TrackCoverPath']) %}
+            <img class="track-cover-image" src="{{ cover_image_src }}" alt="Track cover"><br>
             <button class="track-play-button" onclick="playSong('/stream/{{ track['AudioFilePath'] }}', {{ track['TrackID'] }})">
                 <img
                         src="{{ request.url_for('static', path='images/play.svg') }}"
@@ -45,7 +43,7 @@
                     <div class="contributors-text">
                     {% for c in track.Contributors %}
                         <a hx-get="/user/{{ c['UserID'] }}" hx-target="#content" hx-push-url="true">{{ c["Username"] }}</a>
-                        <a> {% if not loop.last %} ● {% endif %} </a>
+                        {% if not loop.last %} <a>●</a> {% endif %}
                     {% endfor %}
                     </div>
                 </div>

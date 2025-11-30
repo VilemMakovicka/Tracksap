@@ -39,6 +39,18 @@ async def test_ui(request: Request):
         "discover.html",
         {}
     )
+
+@router.get("/error/usernotfound", name="user_not_found_ui")
+async def user_not_found_ui(request: Request):
+    hx_request = request.headers.get("HX-Request")
+    context = {"request": request}
+
+    if hx_request:
+        return request.app.state.templates.TemplateResponse("template.error.user_not_found.html", context)
+
+    context["content_template"] = "template.error.user_not_found.html"
+    return request.app.state.templates.TemplateResponse("base.html", context)
+
 @router.get("/library", name="library_ui")
 async def library_ui(
     request: Request,
