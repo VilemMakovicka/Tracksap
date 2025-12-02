@@ -9,24 +9,26 @@
     <script>
         function playSong(url, track_id) {
             const player = document.getElementById("audio-player");
+            const image_element = document.getElementById("play-button-image-" + track_id);
+            const play_image = "{{ request.url_for('static', path='images/play.svg') }}";
+            const pause_image = "{{ request.url_for('static', path='images/pause.svg') }}"
 
-            let button_images = Array.from(document.getElementsByClassName("play-button-image"));
-            button_images.forEach((element) =>
-                element.src = "{{ request.url_for('static', path='images/play.svg') }}");
+            let all_images = Array.from(document.getElementsByClassName("play-button-image"));
+            all_images.forEach((element) => element.src = play_image);
 
             if(player.src != "" && player.src.includes(url)) {
                 if (player.paused) {
+                    image_element.src = pause_image;
                     player.play();
-                    document.getElementById("play-button-image-" + track_id).src = "{{ request.url_for('static', path='images/pause.svg') }}";
                 } else {
+                    image_element.src = play_image;
                     player.pause();
-                    document.getElementById("play-button-image-" + track_id).src = "{{ request.url_for('static', path='images/play.svg') }}";
                 }
             }
             else {
                 player.src = url;
                 player.play();
-                document.getElementById("play-button-image-" + track_id).src = "{{ request.url_for('static', path='images/pause.svg') }}";
+                image_element.src = pause_image;
             }
         }
 
@@ -37,13 +39,17 @@
         }
 
         async function toggleLikedTrack(track_id) {
-            let current_url = document.getElementById("button_liked_" + track_id).src;
-            if(current_url == "{{ request.url_for('static', path='images/liked.svg') }}") {
-                document.getElementById("button_liked_" + track_id).src = "{{ request.url_for('static', path='images/unliked.svg') }}";
+            const like_button_element = document.getElementById("button_liked_" + track_id);
+            const current_url = like_button_element.src;
+            const unliked_image_url = "{{ request.url_for('static', path='images/unliked.svg') }}";
+            const liked_image_url = "{{ request.url_for('static', path='images/liked.svg') }}";
+
+            if(current_url === liked_image_url) {
+                like_button_element.src = unliked_image_url;
                 await fetch(`/unlike/${track_id}`, { method: "POST" });
             }
             else{
-                document.getElementById("button_liked_" + track_id).src = "{{ request.url_for('static', path='images/liked.svg') }}";
+                like_button_element.src = liked_image_url;
                 await fetch(`/like/${track_id}`, { method: "POST" });
             }
         }

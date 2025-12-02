@@ -4,9 +4,11 @@
     font-weight: normal;
     font-style: normal;
 }
+image{
+
+}
 button{
     color: #878787;
-    background-color: #dddddd;
     padding: 0.5em 1em;
     border-radius: 0.3em;
     border: none;
@@ -14,6 +16,22 @@ button{
     text-decoration: none;
     transition: background-color 0.1s;
 }
+/*
+button{
+    background-color: transparent;
+    background-size: cover;
+    background-repeat: round;
+    background-image: url("../static/images/default_button_mid.png");
+}
+.track-play-button{
+    background-image: url("../static/images/default_button_square.png");
+}
+body{
+    background-image: linear-gradient(to right, #939393, #353535);
+    background-repeat: round;
+    background-size: auto;
+}
+*/
 button:hover{
     color: #cbcbcb;
     background-color: #444444;
@@ -48,7 +66,9 @@ input[type=submit]:hover{
 *{
     font-family: 'league-spartan', serif;
     box-sizing: border-box;
+    /*image-rendering: pixelated;*/
 }
+
 .navbar{
     display: flex;
     align-items: center;
@@ -100,10 +120,24 @@ input[type=submit]:hover{
 body{
     padding: 0;
     margin: 30px;
+
     background-color: white;
+
     display: flex;
     flex-direction: column;
     gap: 30px;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('../static/images/dither.png');
+    opacity: 0.1;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    background-size: 8px auto;
+    z-index: -100;
 }
 .container{
     /*margin-top: 40px;*/

@@ -192,6 +192,7 @@ async def register_ui(request: Request):
 
 @router.post("/register", name="register_post")
 async def register_submit(
+    request: Request,
     username: str = Form(...),
     email: str = Form(...),
     password: str = Form(...),
@@ -200,7 +201,25 @@ async def register_submit(
 ):
     hashed_password = auth_service.hash_password(password)
     user_service.insertUser(username, email, hashed_password)
-    return {"message": "Registered successfully!"}
+    # return login(request, email, password, auth_service)
+    # return {"message": "Registered successfully!"}
+    user: User = auth_service.authenticate(email, password)
+    if not user:
+        return request.app.state.templates.TemplateResponse(
+            "login.html",
+            {
+                "request": request,
+                "error": "Invalid email or password",
+            },
+            status_code=status.HTTP_401_UNAUTHORIZED,
+        )
+    session_id = session_store.create_session(user)
+    response = RedirectResponse(
+        url=request.query_params.get("next") or request.url_for("liked_ui"),
+        status_code=status.HTTP_303_SEE_OTHER,
+    )
+    response.set_cookie(SESSION_COOKIE_NAME, session_id, httponly=True)
+    return response
 
 @router.get("/administration/users", name="administration_users_ui")
 async def administration_users_ui(request: Request, service: UsersService = Depends(users_service)):
