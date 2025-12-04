@@ -9,7 +9,10 @@
         <img src="../media/profile_pictures/{{ user['ProfilePicturePath'] }}" class="image-profile" alt="Profile Picture">
         {% endif %}
         <a class="user-profile-user-name">{{ user['Username'] }}</a>
-        <button class="user-profile-user-settings">Profile settings</button>
+        {% if current_user.id == user["ID"] %}
+            <script> async function openprofilesettings() { window.location.href = "/user/usersettings"; } </script>
+            <button class="user-profile-user-settings" onclick="openprofilesettings()">Profile settings</button>
+        {% endif %}
         <ul>
             <li><a class="user-profile-user-tracks selected">Tracks</a></li>
         </ul>

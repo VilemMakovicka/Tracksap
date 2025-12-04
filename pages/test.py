@@ -118,6 +118,32 @@ async def liked_ui(
     context["library_content"] = "liked.html"
     return request.app.state.templates.TemplateResponse("base.html", context)
 
+@router.get("/user/usersettings", name="user_settings_ui")
+async def user_settings_ui(
+        request: Request,
+        service: UsersService = Depends(users_service),
+        current_user: Optional[User] = Depends(get_current_user)
+    ):
+    if(current_user == None):
+        return render_page(
+        request,
+        "login.html",
+        {}
+        )
+
+    user = service.selectByID(current_user.id)
+    context = {"user": user}
+
+    hx_request = request.headers.get("HX-Request")
+    context["request"] = request
+
+    if hx_request:
+        return request.app.state.templates.TemplateResponse("usersettings.html", context)
+
+    context["content_template"] = "usersettings.html"
+    #context["library_content"] = "usersettings.html"
+    return request.app.state.templates.TemplateResponse("base.html", context)
+
 @router.get("/login", name="login_ui")
 async def login_ui(request: Request):
     return render_page(
@@ -277,11 +303,23 @@ async def test_ui(
     return request.app.state.templates.TemplateResponse("base.html", context)
 
 @router.get("/discover", name="discover_ui")
-async def discover_ui(request: Request):
+async def discover_ui(request: Request, track_service: TracksService = Depends(tracks_service), user: Optional[User] = Depends(get_current_user)):
+    current_user_id = user.id if user is not None else 0
+    tracks = track_service.debugSelectAll(current_user_id)
+
+    for track in tracks:
+        track["Contributors"] = json.loads(track["Contributors"])
+        upload_date_string = track["UploadDate"].split("-")
+        upload_date = datetime(int(upload_date_string[0]),
+                               int(upload_date_string[1]),
+                               int(upload_date_string[2]),
+                               int(upload_date_string[3]),
+                               int(upload_date_string[4]))
+        track["UploadDate"] = time_ago(upload_date)
     return render_page(
         request,
         "discover.html",
-        {}
+        {"tracks": tracks}
     )
 
 @router.get("/stream/{audio_path}")

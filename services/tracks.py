@@ -3,7 +3,7 @@ import json
 from datetime import datetime, date, timedelta
 from typing import List, Dict, Any, Optional
 import sqlite3
-from repositories.tracks import select_by_user, select_all_liked, add_liked, remove_liked
+from repositories.tracks import select_by_user, select_all_liked, add_liked, remove_liked, debug_select_all
 
 class TracksService:
     def __init__(self, conn: sqlite3.Connection):
@@ -21,3 +21,6 @@ class TracksService:
 
     def removeLike(self, track_id, user_id):
         remove_liked(self.conn, track_id, user_id)
+
+    def debugSelectAll(self, current_user_id):
+        return debug_select_all(self.conn, current_user_id)

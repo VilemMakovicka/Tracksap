@@ -1,0 +1,22 @@
+{% block content %}
+{% if not user %}<script>window.location.href = "/error/usernotfound"</script>{% endif %}
+{% set current_user = get_current_user(request) %}
+<div class="user-profile-container">
+    <div class="user-info-container">
+        {% if user['ProfilePicturePath'] is none %}
+        <img src="../static/images/default_profile_picture.png" class="image-profile" alt="Profile Picture">
+        {% else %}
+        <img src="../media/profile_pictures/{{ user['ProfilePicturePath'] }}" class="image-profile" alt="Profile Picture">
+        {% endif %}
+        <a class="user-profile-user-name">{{ user['Username'] }}</a>
+        <button class="user-profile-user-settings">Profile settings</button>
+        <ul>
+            <li><a class="user-profile-user-tracks selected">Tracks</a></li>
+        </ul>
+    </div>
+    <div class="user-tracks-container">
+        usersettings
+        todo: form for changing user profile details
+    </div>
+</div>
+{% endblock %}

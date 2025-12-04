@@ -11,7 +11,7 @@ def select_all(conn: sqlite3.Connection) -> List[Dict[str, Any]]:
 
 def select(conn: sqlite3.Connection, id) -> List[Dict[str, Any]]:
     row = conn.execute(
-        "SELECT ID, UserRoleID, UserBlockStatusID, Username, Email, Password, ProfilePicturePath FROM Users WHERE ID='" + id + "'"
+        "SELECT ID, UserRoleID, UserBlockStatusID, Username, Email, Password, ProfilePicturePath FROM Users WHERE ID='" + str(id)+ "'"
     ).fetchone()
     if row != None:
         return dict(row)
