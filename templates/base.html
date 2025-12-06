@@ -73,6 +73,8 @@
                     {% else %}
                     <script> async function openprofile(profile_id) { window.location.href = "/user/" + profile_id; } </script>
                     <button onclick="openprofile({{ current_user.id }})">My profile</button>
+                    <script> async function openuploadform() { window.location.href = "/upload";}</script>
+                    <button onclick="openuploadform()">Upload a track</button>
                     <script> async function logout() { await fetch(`/logout`, { method: "POST" }); location.reload();} </script>
                     <button onclick="logout()">Logout</button>
                     {% endif %}

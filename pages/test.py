@@ -1,7 +1,7 @@
 import os
 import json
 from typing import List, Dict, Any, Optional
-from fastapi import APIRouter, Depends, Form, Request, Header, HTTPException, status
+from fastapi import APIRouter, Depends, Form, Request, Header, HTTPException, status, UploadFile, File
 from fastapi.responses import StreamingResponse, HTMLResponse
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -26,19 +26,53 @@ from services.users import UsersService
 from services.tracks import TracksService
 
 from services.session import SESSION_COOKIE_NAME, session_store
+import shutil
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 SECRET_KEY = secrets.token_hex(32)
 ALGORITHM = "HS256"
 
-@router.get("/", name="test_ui")
-async def test_ui(request: Request):
-    return render_page(
-        request,
-        "discover.html",
-        {}
+
+@router.get("/upload", name="upoad_track_ui")
+async def upload_track_ui(request: Request):
+    hx_request = request.headers.get("HX-Request")
+    context = {"request": request}
+
+    if hx_request:
+        return request.app.state.templates.TemplateResponse("upload.html", context)
+
+    context["content_template"] = "upload.html"
+    return request.app.state.templates.TemplateResponse("base.html", context)
+
+@router.post("/upload", name="upload_post")
+async def upload(
+    request: Request,
+    track_name: str = Form(...),
+    track_file: UploadFile = File(...),
+    track_cover: UploadFile = File(...),
+    track_service: TracksService = Depends(tracks_service),
+    current_user: Optional[User] = Depends(get_current_user)
+):
+    track_file_name = track_file.filename.replace(' ', '-')
+    track_cover_name = track_cover.filename.replace(' ', '-')
+
+    track_path = f"media/tracks/{track_file_name}"
+    with open(track_path, "wb") as f:
+        shutil.copyfileobj(track_file.file, f)
+
+    cover_path = f"media/track_covers/{track_cover_name}"
+    with open(cover_path, "wb") as f:
+        shutil.copyfileobj(track_cover.file, f)
+
+    track_service.Insert(
+        title=track_name,
+        audio_file_path=track_file_name,
+        track_cover_path=track_cover_name,
+        current_user_id=current_user.id
     )
+
+    return {"message": "Files uploaded"}
 
 @router.get("/error/usernotfound", name="user_not_found_ui")
 async def user_not_found_ui(request: Request):
@@ -142,6 +176,37 @@ async def user_settings_ui(
 
     context["content_template"] = "usersettings.html"
     #context["library_content"] = "usersettings.html"
+    return request.app.state.templates.TemplateResponse("base.html", context)
+
+@router.get("/search/{search_requirements}", name="search_ui")
+async def user_settings_ui(
+        search_requirements: str,
+        request: Request,
+        tracksservice: TracksService = Depends(tracks_service),
+        current_user: Optional[User] = Depends(get_current_user)
+    ):
+    current_user_id = current_user.id if current_user is not None else 0
+    tracks = tracksservice.SelectByQuery(search_requirements, current_user_id)
+    for track in tracks:
+        track["Contributors"] = json.loads(track["Contributors"])
+        upload_date_string = track["UploadDate"].split("-")
+        upload_date = datetime(int(upload_date_string[0]),
+                               int(upload_date_string[1]),
+                               int(upload_date_string[2]),
+                               int(upload_date_string[3]),
+                               int(upload_date_string[4]))
+        track["UploadDate"] = time_ago(upload_date)
+        track["liked"] = 'true'
+
+    context = {"tracks": tracks, "query": search_requirements}
+
+    hx_request = request.headers.get("HX-Request")
+    context["request"] = request
+
+    if hx_request:
+        return request.app.state.templates.TemplateResponse("search.html", context)
+
+    context["content_template"] = "search.html"
     return request.app.state.templates.TemplateResponse("base.html", context)
 
 @router.get("/login", name="login_ui")
@@ -257,7 +322,8 @@ async def administration_users_ui(request: Request, service: UsersService = Depe
         {"users": users}
     )
 
-@router.get("/user/{user_id}", name="users_ui")
+@router.get("/user/{user_id}", name="user_ui")
+@router.get("/user/{user_id}/tracks", name="user_tracks_ui")
 async def userpage_ui(
     request: Request,
     user_id: str,
@@ -302,6 +368,7 @@ async def test_ui(
     context["library_content"] = "playlists.html"
     return request.app.state.templates.TemplateResponse("base.html", context)
 
+@router.get("/", name="test_ui")
 @router.get("/discover", name="discover_ui")
 async def discover_ui(request: Request, track_service: TracksService = Depends(tracks_service), user: Optional[User] = Depends(get_current_user)):
     current_user_id = user.id if user is not None else 0
