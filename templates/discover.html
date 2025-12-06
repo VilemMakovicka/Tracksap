@@ -1,51 +1,5 @@
+{% import "components/track_container.jinja" as track_container %}
 {% block content %}
-    <div class="user-tracks-container">
-        <div class="user-profile-filter-bar">
-            <div>
-                <button>Sort</button>
-                <button>Tags</button>
-            </div>
-            <button>Upload</button>
-        </div>
-        {% for track in tracks %}
-        <div class="track-container">
-            {% set cover_image_src = "../static/images/default_track_cover.png" if track['TrackCoverPath'] == "" else ("../media/track_covers/" ~ track['TrackCoverPath']) %}
-            <img class="track-cover-image" src="{{ cover_image_src }}" alt="Track cover"><br>
-            <button class="track-play-button" onclick="playSong('/stream/{{ track['AudioFilePath'] }}', {{ track['TrackID'] }})">
-                <img
-                        src="{{ request.url_for('static', path='images/play.svg') }}"
-                        id="play-button-image-{{ track['TrackID'] }}"
-                        class="play-button-image"
-                        onload="initializePlayButton('play-button-image-{{ track['TrackID'] }}', '{{track['AudioFilePath']}}')"
-                >
-            </button>
-            <div>
-                <div class="track-container-left">
-                    <div>
-                        <a class="track-title" href="/tracks/{{ track['TrackID'] }}">{{ track["Title"] }}</a>
-                        <a>● Single ● 2:23</a>
-                    </div>
-                    <div class="contributors-text">
-                    {% for c in track.Contributors %}
-                        <a hx-get="/user/{{ c['UserID'] }}" hx-target="#content" hx-push-url="true">{{ c["Username"] }}</a>
-                        {% if not loop.last %} <a>●</a> {% endif %}
-                    {% endfor %}
-                    </div>
-                </div>
-                <div class="track-container-right">
-                    <div>
-                        {% if current_user %}
-                        {% if track.liked == 'true' %}
-                        <img src="{{ request.url_for('static', path='images/liked.svg') }}" id="button_liked_{{ track['TrackID'] }}" onclick="toggleLikedTrack({{ track["TrackID"] }})">
-                        {% else %}
-                        <img src="{{ request.url_for('static', path='images/unliked.svg') }}" id="button_liked_{{ track['TrackID'] }}" onclick="toggleLikedTrack({{ track["TrackID"] }})">
-                        {% endif %}
-                        {% endif %}
-                    </div>
-                    <a>{{ track["UploadDate"] }}</a>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
+    {% set current_user = get_current_user(request) %}
+    {{ track_container.generate(request, tracks, current_user) }}
 {% endblock %}

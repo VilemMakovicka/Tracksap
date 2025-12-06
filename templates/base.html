@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <title>{% block title %}Aplikace{% endblock %}</title>
     <link rel="stylesheet" href="{{ request.url_for('static', path='style.css') }}">
-    <link rel="icon" type="image/x-icon" href="{{ request.url_for('static', path='icon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ request.url_for('static', path='images/icon.png') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
         const unliked_image_url = "{{ request.url_for('static', path='images/unliked.svg') }}";
@@ -25,8 +25,7 @@
     <header>
         <nav class="navbar">
             <div class="nav-left">
-                <script> async function openhomepage() { window.location.href = "/discover"; } </script>
-                <img src="{{ request.url_for('static', path='images/headerlogo.png') }}" onclick="openhomepage()">
+                <img src="{{ request.url_for('static', path='images/headerlogo.png') }}" onclick="open_url('/discover')">
             </div>
             {% if current_user %}
             <div class="nav-center">

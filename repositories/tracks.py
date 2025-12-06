@@ -1,11 +1,7 @@
-# app/repositories/items.py
 import datetime
-from datetime import datetime, date, timedelta
-from dateutil.relativedelta import relativedelta
-from typing import List, Dict, Any, Optional
+from datetime import datetime
+from typing import List, Dict, Any
 import sqlite3
-from fastapi import Depends
-from services.users import User
 
 def select_by_user(conn: sqlite3.Connection, id, user_id) -> List[Dict[str, Any]]:
     rows = conn.execute(
@@ -94,7 +90,7 @@ def remove_liked(conn: sqlite3.Connection, track_id, user_id):
     )
     conn.commit()
 
-def debug_select_all(conn: sqlite3.Connection, current_user_id):
+def debug_select_all(conn: sqlite3.Connection, current_user_id = 0):
     rows = conn.execute(
         """WITH liked_tracks AS (
                     SELECT TrackID
@@ -127,7 +123,7 @@ def debug_select_all(conn: sqlite3.Connection, current_user_id):
     ).fetchall()
     return [dict(r) for r in rows]
 
-def select_by_text(conn: sqlite3.Connection, current_user_id, query):
+def select_by_text(conn: sqlite3.Connection, query, current_user_id = 0):
     rows = conn.execute(
         """WITH liked_tracks AS (
             SELECT TrackID

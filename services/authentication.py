@@ -15,21 +15,10 @@ class AuthenticationService:
         user = users_get_by_email(self.conn, email)
         if not user:
             return None
-        #if not pwd_context.verify(password, user["Password"]):
-        #    return None
         hashed_password = user["Password"]
         if not bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8")):
             return None
-        return User(id=user["ID"], username=user["Email"], role=user["UserRoleID"])
-
-    #@router.post("/login")
-    #async def login(form_data: OAuth2PasswordRequestForm = Depends(), service: UsersService = Depends(users_service)):
-    #    user = service.getByEmail(form_data.username)
-    #    if not user or not verify_password(form_data.password, user["Password"]):
-    #        # if not verify_password(form_data.password, user["Password"]):
-    #        raise HTTPException(status_code=401, detail="Incorrect email or password")
-    #    access_token = create_access_token(data={"sub": user["Email"]})
-    #    return {"access_token": access_token, "token_type": "bearer"}
+        return User(id=user["ID"], username=user["Email"], role=user["UserRole"])
 
     def hash_password(self, password: str) -> str:
         print("hashing the password:" + password)

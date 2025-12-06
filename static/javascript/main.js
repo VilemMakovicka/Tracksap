@@ -42,6 +42,8 @@ async function toggleLikedTrack(track_id) {
     }
 }
 
+async function open_url(url) { window.location.href = url; }
+
 function initializePlayButton(element_id, track_path) {
     const player = document.getElementById("audio-player");
     if(player.src.includes(track_path.trim()) && !player.paused) {

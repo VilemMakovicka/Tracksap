@@ -1,0 +1,61 @@
+{% macro generate(request, track, current_user) %}
+<div class="track-container track-container-visible">
+    {% set cover_image_src = "../static/images/default_track_cover.png" if track['TrackCoverPath'] == "" else ("../media/track_covers/" ~ track['TrackCoverPath']) %}
+    <img class="track-cover-image" src="{{ cover_image_src }}" alt="Track cover"><br>
+    <button class="track-play-button" onclick="playSong('/stream/{{ track['AudioFilePath'] }}', {{ track['TrackID'] }})">
+        <img
+                src="{{ request.url_for('static', path='images/play.svg') }}"
+                id="play-button-image-{{ track['TrackID'] }}"
+                class="play-button-image"
+                onload="initializePlayButton('play-button-image-{{ track['TrackID'] }}', '{{track['AudioFilePath']}}')"
+        >
+    </button>
+    <div>
+        <div class="track-container-left">
+            <div>
+                <a class="track-title" href="/tracks/{{ track['TrackID'] }}">{{ track["Title"] }}</a>
+                <a>● Single ● 2:23</a>
+            </div>
+            <div class="contributors-text">
+            {% for c in track.Contributors %}
+                <a hx-get="/user/{{ c['UserID'] }}" hx-target="#content" hx-push-url="true">{{ c["Username"] }}</a>
+                <a> {% if not loop.last %} ● {% endif %} </a>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="track-container-right">
+            <div style="position: relative;">
+                {% if current_user %}
+                    {% set liked_image_src = request.url_for('static', path='images/liked.svg') if track.liked == 'true' else request.url_for('static', path='images/unliked.svg') %}
+                    <button onclick="toggleLikedTrack({{ track["TrackID"] }})">
+                        <img src="{{ liked_image_src }}" id="button_liked_{{ track['TrackID'] }}">
+                    </button>
+                    <button onclick="">
+                            <img src="{{ request.url_for('static', path='images/playlist.svg') }}">
+                    </button>
+                {% endif %}
+                <button onclick="">
+                        <img src="{{ request.url_for('static', path='images/report.svg') }}">
+                </button>
+                <button onclick="">
+                    <img src="{{ request.url_for('static', path='images/settings.svg') }}">
+
+                </button>
+                <!--<div class="overlay-menu">
+                    <form
+                            action="/report"
+                            method="POST"
+                            style="display: flex; flex-direction: column;"
+                    >
+                        <button onclick="exchangeElementVisibility('registration-form-small', 'login-form-small')">Create a new account</button>
+                        <input type="text" name="message" placeholder="message" required>
+                        <input type="password" name="password" placeholder="Password" required>
+                        <input type="submit" value="Login">
+                    </form>
+                </div>-->
+            </div>
+            <a>{{ track["UploadDate"] }}</a>
+        </div>
+    </div>
+</div>
+{% endmacro %}

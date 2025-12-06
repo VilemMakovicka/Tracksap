@@ -1,0 +1,38 @@
+{% import "components/track_element.jinja" as track_element %}
+{% macro generate(request, tracks, current_user) %}
+    <div class="user-tracks-container">
+        <div class="user-profile-filter-bar">
+            <div>
+                <button>sort</button>
+                <input type="text" placeholder="tags...">
+                <input type="text" placeholder="search..." id="track_search_bar_alternative" oninput="refresh_search();">
+            </div>
+            <!--<button>Upload</button>-->
+        </div>
+        {% for track in tracks %}
+            {{ track_element.generate(request, track, current_user) }}
+        {% endfor %}
+
+        <script>
+        function refresh_search(){
+            let query = document.getElementById("track_search_bar_alternative").value;
+            let track_containers = Array.from(document.getElementsByClassName("track-container"));
+            if(query.trim() === ""){
+                track_containers.forEach((element) => {
+                    element.classList.add("track-container-visible");
+                    element.classList.remove("track-container-hidden");
+                });
+            }
+            else{
+                track_containers.forEach((element) => {
+                    const title = element.querySelector(".track-title").textContent.toLowerCase();
+                    const matches = title.includes(query.toLowerCase());
+
+                    element.classList.toggle("track-container-visible", matches);
+                    element.classList.toggle("track-container-hidden", !matches);
+                });
+            }
+        }
+    </script>
+    </div>
+{% endmacro %}
