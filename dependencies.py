@@ -3,6 +3,7 @@ from typing import Iterator, Optional
 from fastapi import Depends, Request
 from database.database import open_connection
 from services.authentication import AuthenticationService
+from services.reports import ReportsService
 from services.tracks import TracksService
 from services.users import UsersService, User
 from services.session import session_store, SESSION_COOKIE_NAME
@@ -17,6 +18,9 @@ def users_service(conn: sqlite3.Connection = Depends(get_conn)) -> UsersService:
 
 def tracks_service(conn: sqlite3.Connection = Depends(get_conn)) -> TracksService:
     return TracksService(conn)
+
+def reports_service(conn: sqlite3.Connection = Depends(get_conn)) -> ReportsService:
+    return ReportsService(conn)
 
 def authentication_service(conn: sqlite3.Connection = Depends(get_conn)) -> AuthenticationService:
     return AuthenticationService(conn)

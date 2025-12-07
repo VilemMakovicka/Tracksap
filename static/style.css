@@ -27,6 +27,33 @@ button:hover, .button-esque:hover{
     background-image: linear-gradient(to top right, #2e2e2e, #575757);
     color: white;
 }
+table{
+    width: 100%;
+    border: 2px solid black;
+    border-radius: .3em;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+thead th {
+    line-height: 1.5;
+}
+th,
+td {
+    padding: 5px;
+    border: 1px solid black;
+}
+tbody tr:nth-child(1) {
+    background-image: linear-gradient(to top right, #6c6c6c, #a1a1a1);
+    color: #000000;
+}
+tbody tr {
+    background-image: linear-gradient(to top right, #2e2e2e, #575757);
+    color: #afafaf;
+}
+tbody tr>td>a[href]{
+    color: white;
+}
+
 body{
     background-image: linear-gradient(to bottom left, #939393, #353535);
     background-repeat: round;

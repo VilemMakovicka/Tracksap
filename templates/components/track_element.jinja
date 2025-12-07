@@ -41,7 +41,7 @@
                 {% endif %}
                 <div class="overlay-menu overlay-menu-hidden" id="report-menu-{{ track["TrackID"] }}">
                     <form
-                            action="/report"
+                            action="/report/{{ track["TrackID"] }}"
                             method="POST"
                             style="display: flex; flex-direction: column;"
                     >

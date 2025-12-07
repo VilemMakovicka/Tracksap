@@ -9,6 +9,8 @@ from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
 from passlib.context import CryptContext
 from starlette.responses import RedirectResponse
+
+from services.reports import ReportsService
 from services.users import User
 
 from services.authentication import AuthenticationService
@@ -20,6 +22,7 @@ import database.database
 import repositories.users
 from dependencies import users_service
 from dependencies import tracks_service
+from dependencies import reports_service
 from services.session import session_store
 
 from services.users import UsersService
@@ -302,6 +305,16 @@ async def logout(request: Request):
     response.delete_cookie(SESSION_COOKIE_NAME)
     return response
 
+@router.post("/report/{track_id}")
+async def report_post(
+        request: Request,
+        track_id: str,
+        message: str = Form(...),
+        service: ReportsService = Depends(reports_service)
+):
+    service.insertReport(track_id, message)
+    return "reported"
+
 @router.get("/register", name="register_ui")
 async def register_ui(request: Request):
     return render_page(
@@ -349,6 +362,16 @@ async def administration_users_ui(request: Request, service: UsersService = Depe
         request,
         "administration_users.html",
         {"users": users}
+    )
+
+@router.get("/administration/reports", name="administration_reports_ui")
+async def administration_reports_ui(request: Request, service: ReportsService = Depends(reports_service)):
+    tracks: List[Dict[str, Any]] = service.debugSelectAll()
+
+    return render_page(
+        request,
+        "administration_reports.html",
+        {"tracks": tracks}
     )
 
 @router.get("/user/{user_id}", name="user_ui")

@@ -1,0 +1,16 @@
+{% block administration_content %}
+<table>
+    <tr>
+        <th>Track</th>
+        <th>Message</th>
+        <th>Date</th>
+    </tr>
+    {% for track in tracks %}
+    <tr>
+        <td><a href="/tracks/{{ track['ID'] }}">{{ track["ID"] }}</a></td>
+        <td><a>{{ track["Message"] }}</a></td>
+        <td><a>{{ track["DateOfReport"] }}</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
