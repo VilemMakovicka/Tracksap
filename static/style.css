@@ -7,7 +7,7 @@
 image{
 
 }
-button{
+button, .button-esque{
     color: black;
     padding: 0.5em 1em;
     border-radius: 0.3em;
@@ -18,16 +18,15 @@ button{
     box-shadow: 0 0 3px #0000008a;
     background-image: linear-gradient(to bottom left, #d4d4d4, #707070);
 }
-/*
-button{
-    background-color: transparent;
-    background-size: cover;
-    background-repeat: round;
-    background-image: url("../static/images/default_button_mid.png");
+button:hover, .button-esque:hover{
+    color: #cbcbcb;
+    background-color: #444444;
+    cursor: pointer;
 }
-.track-play-button{
-    background-image: url("../static/images/default_button_square.png");
-}*/
+.button-esque.selected{
+    background-image: linear-gradient(to top right, #2e2e2e, #575757);
+    color: white;
+}
 body{
     background-image: linear-gradient(to bottom left, #939393, #353535);
     background-repeat: round;
@@ -35,11 +34,6 @@ body{
     min-height: 100vh;
 }
 
-button:hover{
-    color: #cbcbcb;
-    background-color: #444444;
-    cursor: pointer;
-}
 input[type=submit]{
     color: #22626e;
     background-image: linear-gradient(to bottom left, #b6f7fe, #5cb9d3);
@@ -65,7 +59,7 @@ input[type=password] {
         linear-gradient(to bottom left, #d4d4d4, #707070) border-box;
 
     border-radius: .3em;
-    border: 3px solid transparent;
+    border: 2px solid transparent;
     box-shadow: 0 0 3px #0000008a, inset 0 0 3px #0000008a;
 }
 
@@ -99,12 +93,10 @@ input[type=text]::placeholder, input[type=password]::placeholder{
     flex: 1;
     height: 100%;
 }
-.navbar div a{
+/*.navbar>div>a{
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #878787;
-    background-color: #dddddd;
     height: 100%;
     width: 100px;
     border-radius: 0.3em;
@@ -112,21 +104,21 @@ input[type=text]::placeholder, input[type=password]::placeholder{
     text-decoration: none;
     transition: background-color 0.1s;
     cursor: pointer;
-}
-.navbar div img{
+}*/
+.navbar>div>img{
     height: 100%;
     margin: auto 0;
     cursor: pointer;
     filter: drop-shadow(0 0 3px #0000008a);
 }
-.navbar div a:hover{
+/*.navbar div a:hover{
     color: #cbcbcb;
     background-color: #444444;
-}
-.navbar div .selected{
+}*/
+/*.navbar div .selected{
     color: #cbcbcb;
     background-color: #444444;
-}
+}*/
 .nav-center {
     display: flex;
     justify-content: center;
@@ -217,10 +209,14 @@ ul {
 .image-profile{
     height: 150px;
     width: 150px;
-    border-radius: 0.3em;
-    /*border: solid black;*/
     border-radius: 100%;
     filter: drop-shadow(0 0 3px #0000008a);
+}
+.image-profile-compact{
+    height: 100%;
+    border-radius: 100%;
+    filter: drop-shadow(0 0 3px #0000008a);
+    aspect-ratio: 1;
 }
 .user-profile-user-name{
     font-size: 2em;
@@ -275,7 +271,6 @@ form{
     top: 25px;
     position: absolute;
     right: 0;
-    height: 200px;
     border-style: none;
     border-radius: 0.3em;
     flex-direction: column;
@@ -285,6 +280,16 @@ form{
     padding: 20px;
     gap: 10px;
     filter: drop-shadow(0 0 3px #0000008a);
+    z-index: 1;
+    transition: 0.4s;
+}
+.overlay-menu-visible{
+    opacity: 1;
+    pointer-events: all;
+}
+.overlay-menu-hidden{
+    opacity: 0;
+    pointer-events: none;
 }
 .track-container{
     display: flex;
@@ -322,8 +327,9 @@ form{
     padding: 20px;
     gap: 10px;
     filter: drop-shadow(0 0 3px #0000008a);
-    z-index: 1;
+    z-index: 2;
 }
+
 .track-container-left>a, .track-container-left>div>a:last-child{
     color: #878787;
     font-size: 1em;

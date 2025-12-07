@@ -178,6 +178,35 @@ async def user_settings_ui(
     #context["library_content"] = "usersettings.html"
     return request.app.state.templates.TemplateResponse("base.html", context)
 
+@router.post("/usersettings", name="user_settings_post")
+async def user_settings_post(
+    request: Request,
+    username: str = Form(...),
+    email: str = Form(...),
+    profile_picture: Optional[UploadFile] = File(None),
+    user_service: UsersService = Depends(users_service),
+    current_user: Optional[User] = Depends(get_current_user)
+):
+    #pfp
+    if profile_picture is not None and not profile_picture.filename == "":
+        profile_picture_name = profile_picture.filename.replace(' ', '-')
+        profile_picture_path = f"media/profile_pictures/{profile_picture_name}"
+
+        with open(profile_picture_path, "wb") as f:
+            shutil.copyfileobj(profile_picture.file, f)
+
+        user_service.updateProfilePicturePath(current_user.id, profile_picture_name);
+
+    #username
+    if username is not None and str(username).strip() != "":
+        user_service.updateUsername(current_user.id, username)
+    #email
+    if email is not None and str(email).strip() != "":
+        user_service.updateEmail(current_user.id, email)
+    #password
+    #jeste nefunkcni
+    return {"message": "Files uploaded"}
+
 @router.get("/search/{search_requirements}", name="search_ui")
 async def user_settings_ui(
         search_requirements: str,
@@ -332,6 +361,13 @@ async def userpage_ui(
     current_user: Optional[User] = Depends(get_current_user)
 ):
     user = service.selectByID(user_id)
+    #if user["UserRole"] != "artist":
+    #    return render_page(
+    #        request,
+    #        "login.html",
+    #        {}
+    #    )
+
     current_user_id = current_user.id if current_user is not None else 0
     tracks = track_service.selectByUser(user_id, current_user_id)
 

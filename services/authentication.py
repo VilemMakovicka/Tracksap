@@ -18,7 +18,13 @@ class AuthenticationService:
         hashed_password = user["Password"]
         if not bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8")):
             return None
-        return User(id=user["ID"], username=user["Email"], role=user["UserRole"])
+        return User(
+            id=user["ID"],
+            username=user["Username"],
+            email=user["Email"],
+            role=user["UserRole"],
+            profile_picture_path=user["ProfilePicturePath"]
+        )
 
     def hash_password(self, password: str) -> str:
         print("hashing the password:" + password)

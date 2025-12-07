@@ -1,7 +1,19 @@
 {% import "components/track_container.jinja" as track_container %}
 {% block content %}
-{% if not user %}<script>window.location.href = "/error/usernotfound"</script>{% endif %}
 {% set current_user = get_current_user(request) %}
+
+{% if not user %}<script>window.location.href = "/error/usernotfound"</script>{% endif %}
+
+{% if user["UserRole"] == "listener" %}
+    {% if current_user.id == user["ID"] %}
+        <a>You don't have an artist profile.</a><br>
+        <button>Change to an artist profile</button>
+    {% else %}
+        <a>This user doesn't have an artist profile.</a>
+    {% endif %}
+{% endif %}
+
+{% if user["UserRole"] == "artist" %}
 <div class="user-profile-container">
     <div class="user-info-container">
         {% if user['ProfilePicturePath'] is none %}
@@ -11,7 +23,7 @@
         {% endif %}
         <a class="user-profile-user-name">{{ user['Username'] }}</a>
         {% if current_user.id == user["ID"] %}
-            <button class="user-profile-user-settings" onclick="open_url('/user/usersettings')">Profile settings</button>
+            <!--<button class="user-profile-user-settings" onclick="open_url('/user/usersettings')">Profile settings</button>-->
         {% endif %}
         <ul>
             <li><a class="user-profile-user-tracks selected" href="/user/{{ user['ID'] }}/tracks">Tracks</a></li>
@@ -19,4 +31,6 @@
     </div>
     {{ track_container.generate(request, tracks, current_user) }}
 </div>
+{% endif %}
+
 {% endblock %}

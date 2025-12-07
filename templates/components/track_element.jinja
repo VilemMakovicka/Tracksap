@@ -25,7 +25,7 @@
         </div>
         <div class="track-container-right">
             <div style="position: relative;">
-                {% if current_user %}
+                {% if current_user.role == "listener" or current_user.role == "artist" %}
                     {% set liked_image_src = request.url_for('static', path='images/liked.svg') if track.liked == 'true' else request.url_for('static', path='images/unliked.svg') %}
                     <button onclick="toggleLikedTrack({{ track["TrackID"] }})">
                         <img src="{{ liked_image_src }}" id="button_liked_{{ track['TrackID'] }}">
@@ -34,25 +34,26 @@
                             <img src="{{ request.url_for('static', path='images/playlist.svg') }}">
                     </button>
                 {% endif %}
-                <button onclick="">
+                {% if current_user.role != "administrator" %}
+                <button onclick="toggleOverlayMenu('report-menu-{{ track["TrackID"] }}')">
                         <img src="{{ request.url_for('static', path='images/report.svg') }}">
                 </button>
-                <button onclick="">
-                    <img src="{{ request.url_for('static', path='images/settings.svg') }}">
-
-                </button>
-                <!--<div class="overlay-menu">
+                {% endif %}
+                <div class="overlay-menu overlay-menu-hidden" id="report-menu-{{ track["TrackID"] }}">
                     <form
                             action="/report"
                             method="POST"
                             style="display: flex; flex-direction: column;"
                     >
-                        <button onclick="exchangeElementVisibility('registration-form-small', 'login-form-small')">Create a new account</button>
                         <input type="text" name="message" placeholder="message" required>
-                        <input type="password" name="password" placeholder="Password" required>
-                        <input type="submit" value="Login">
+                        <input type="submit" value="Report">
                     </form>
-                </div>-->
+                </div>
+                {% if current_user.role == "administrator" %}
+                <button onclick="">
+                    <img src="{{ request.url_for('static', path='images/settings.svg') }}">
+                </button>
+                {% endif %}
             </div>
             <a>{{ track["UploadDate"] }}</a>
         </div>

@@ -9,14 +9,19 @@
         <img src="../media/profile_pictures/{{ user['ProfilePicturePath'] }}" class="image-profile" alt="Profile Picture">
         {% endif %}
         <a class="user-profile-user-name">{{ user['Username'] }}</a>
-        <button class="user-profile-user-settings">Profile settings</button>
         <ul>
-            <li><a class="user-profile-user-tracks selected">Tracks</a></li>
+            <li><a class="user-profile-user-tracks selected" href="/user/{{ user['ID'] }}/tracks">Tracks</a></li>
         </ul>
     </div>
     <div class="user-tracks-container">
-        usersettings
-        todo: form for changing user profile details
+        usersettings todo: functionality
+        <form action="/usersettings" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column;">
+            <input type="file" name="profile_picture" accept=".jpg,.jpeg,.png">
+            <input type="text" name="username" placeholder="Username">
+            <input type="text" name="email" placeholder="Email">
+            <input type="password" name="password" placeholder="Password">
+            <input type="submit" value="Save changes">
+        </form>
     </div>
 </div>
 {% endblock %}

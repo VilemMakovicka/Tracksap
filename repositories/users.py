@@ -15,7 +15,12 @@ def select_all(conn: sqlite3.Connection) -> List[Dict[str, Any]]:
 
 def select(conn: sqlite3.Connection, id) -> Dict[str, Any]:
     row = conn.execute(
-        "SELECT ID, UserRoleID, UserBlockStatusID, Username, Email, Password, ProfilePicturePath FROM Users WHERE ID='" + str(id)+ "'"
+        f"""
+            SELECT Users.ID, UserRole.Name "UserRole", UserBlockStatus.Name "UserBlockStatus", Username, Email, Password, ProfilePicturePath 
+            FROM Users 
+            JOIN UserRole ON UserRole.ID = Users.UserRoleID 
+            JOIN UserBlockStatus ON UserBlockStatus.ID = Users.UserBlockStatusID 
+            WHERE Users.ID='{str(id)}'"""
     ).fetchone()
     if row != None:
         return dict(row)
@@ -43,3 +48,8 @@ def get_by_email(conn: sqlite3.Connection, email: str):
         return dict(row)
     else:
         return None
+
+def update_value(conn: sqlite3.Connection, user_id: int, value_name: str, value: str):
+    cursor = conn.cursor()
+    cursor.execute(f"UPDATE Users SET {value_name}={value} WHERE id = {user_id}")
+    conn.commit()

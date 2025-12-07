@@ -50,3 +50,8 @@ function initializePlayButton(element_id, track_path) {
         document.getElementById(element_id).src = pause_image;
     }
 }
+
+function toggleOverlayMenu(element_id) {
+    document.getElementById(element_id).classList.toggle('overlay-menu-visible');
+    document.getElementById(element_id).classList.toggle('overlay-menu-hidden');
+}
