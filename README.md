@@ -1,0 +1,3 @@
+komentáře
+bugy
+validace formulářů
