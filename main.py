@@ -2,7 +2,10 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
-from pages.test import router as test_router
+from pages.authentication import authentication_router
+from pages.tracks import track_router
+from pages.users import user_router
+from pages.administration import administration_router
 from dependencies import get_current_user
 
 def create_app() -> FastAPI:
@@ -11,11 +14,15 @@ def create_app() -> FastAPI:
     app.mount("/media", StaticFiles(directory="media"), name="media")
     app.state.templates = Jinja2Templates(directory="templates")
     app.state.templates.env.globals["get_current_user"] = get_current_user
-    app.include_router(test_router, prefix="", tags=["test"])
+
+    app.include_router(authentication_router, prefix="", tags=["authentication"])
+    app.include_router(track_router, prefix="", tags=["tracks"])
+    app.include_router(user_router, prefix="", tags=["users"])
+    app.include_router(administration_router, prefix="", tags=["administration"])
+
     return app
 
 def print_all_routes(app):
-    print("=== ROUTES ===")
     for r in app.routes:
         try:
             print(getattr(r, "methods", ""), getattr(r, "path", ""))

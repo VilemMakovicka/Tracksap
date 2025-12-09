@@ -21,6 +21,7 @@ def select_by_user(conn: sqlite3.Connection, id, user_id) -> List[Dict[str, Any]
                 Tracks.TrackCoverPath,
                 Tracks.Title,
                 Tracks.UploadDate,
+                Tracks.Length,
                 json_group_array(
                     json_object(
                         'UserID', Users.ID,
@@ -55,6 +56,7 @@ def select_all_liked(conn: sqlite3.Connection, user_id) -> List[Dict[str, Any]]:
                 Tracks.TrackCoverPath,
                 Tracks.Title,
                 Tracks.UploadDate,
+                Tracks.Length,
                 json_group_array(
                     json_object(
                         'UserID', Users.ID,
@@ -103,6 +105,7 @@ def debug_select_all(conn: sqlite3.Connection, current_user_id = 0):
                     Tracks.TrackCoverPath,
                     Tracks.Title,
                     Tracks.UploadDate,
+                    Tracks.Length,
                     json_group_array(
                         json_object(
                             'UserID', Users.ID,
@@ -136,6 +139,7 @@ def select_by_text(conn: sqlite3.Connection, query, current_user_id = 0):
             Tracks.TrackCoverPath,
             Tracks.Title,
             Tracks.UploadDate,
+            Tracks.Length,
             json_group_array(
                 json_object(
                     'UserID', Users.ID,
@@ -157,14 +161,14 @@ def select_by_text(conn: sqlite3.Connection, query, current_user_id = 0):
     ).fetchall()
     return [dict(r) for r in rows]
 
-def insert(conn: sqlite3.Connection, title: str, audio_file_path: str, track_cover_path: str, current_user_id: str):
+def insert(conn: sqlite3.Connection, title: str, audio_file_path: str, track_cover_path: str, current_user_id: str, track_length: str):
     now = datetime.now()
     upload_date = f"{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}"
 
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO Tracks(Title, AudioFilePath, TrackCoverPath, UploadDate) VALUES (?, ?, ?, ?)",
-        (title, audio_file_path, track_cover_path, upload_date)
+        "INSERT INTO Tracks(Title, AudioFilePath, TrackCoverPath, UploadDate, Length) VALUES (?, ?, ?, ?, ?)",
+        (title, audio_file_path, track_cover_path, upload_date, track_length)
     )
     conn.commit()
     track_id = cursor.lastrowid

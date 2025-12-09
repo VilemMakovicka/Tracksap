@@ -7,7 +7,7 @@
 {% if user["UserRole"] == "listener" %}
     {% if current_user.id == user["ID"] %}
         <a>You don't have an artist profile.</a><br>
-        <button>Change to an artist profile</button>
+        <button onclick="changeProfileToArtist()">Change to an artist profile</button>
     {% else %}
         <a>This user doesn't have an artist profile.</a>
     {% endif %}

@@ -50,7 +50,7 @@ tbody tr {
     background-image: linear-gradient(to top right, #2e2e2e, #575757);
     color: #afafaf;
 }
-tbody tr>td>a[href]{
+a[href]{
     color: white;
 }
 

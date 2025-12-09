@@ -14,7 +14,7 @@
         <div class="track-container-left">
             <div>
                 <a class="track-title" href="/tracks/{{ track['TrackID'] }}">{{ track["Title"] }}</a>
-                <a>● Single ● 2:23</a>
+                <a>● Single ● {{ track['Length'] }}</a>
             </div>
             <div class="contributors-text">
             {% for c in track.Contributors %}

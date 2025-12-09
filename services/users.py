@@ -1,5 +1,4 @@
-# app/services/items.py
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 import sqlite3
 from dataclasses import dataclass
 from repositories.users import (
@@ -22,26 +21,30 @@ class UsersService:
     def __init__(self, conn: sqlite3.Connection):
         self.conn = conn
 
-    def selectAll(self) -> List[Dict[str, Any]]:
+    def select_all(self) -> List[Dict[str, Any]]:
         return users_select(self.conn)
 
-    def selectByID(self, id) -> List[Dict[str, Any]]:
+    def select_by_id(self, id) -> Dict[str, Any]:
         return users_select_by_id(self.conn, id)
 
-    def insertUser(self, username: str, email: str, password: str):
+    def insert_user(self, username: str, email: str, password: str):
         users_insert_user(self.conn, username, email, password)
 
-    def getByEmail(self, email: str):
+    def get_by_email(self, email: str):
         return users_get_by_email(self.conn, email)
 
-    def updateValue(self, user_id: int, value_name: str, value: str):
+    def update_value(self, user_id: int, value_name: str, value: str):
         users_update_value(self.conn, user_id, value_name, value)
 
-    def updateProfilePicturePath(self, user_id: int, value: str):
+    def update_profile_picture_path(self, user_id: int, value: str):
         users_update_value(self.conn, user_id, "ProfilePicturePath", f"'{value}'")
 
-    def updateUsername(self, user_id: int, value: str):
+    def update_username(self, user_id: int, value: str):
         users_update_value(self.conn, user_id, "Username", f"'{value}'")
 
-    def updateEmail(self, user_id: int, value: str):
+    def update_email(self, user_id: int, value: str):
         users_update_value(self.conn, user_id, "Email", f"'{value}'")
+
+    def update_role_to_artist(self, user_id: int):
+        artist_role_id = 3
+        users_update_value(self.conn, user_id, "UserRoleID", str(artist_role_id))

@@ -55,3 +55,7 @@ function toggleOverlayMenu(element_id) {
     document.getElementById(element_id).classList.toggle('overlay-menu-visible');
     document.getElementById(element_id).classList.toggle('overlay-menu-hidden');
 }
+
+async function changeProfileToArtist(){
+    await fetch(`/changetoartist`, { method: "POST" });
+}

@@ -1,5 +1,5 @@
 {% import "components/track_container.jinja" as track_container %}
 {% block content %}
     <h3>Search results for <b style="font-weight: 100;">"{{ query }}"</b>: </h3>
-    {{ track_container.generate(request, tracks) }}
+    {{ track_container.generate(request, tracks, current_user) }}
 {% endblock %}

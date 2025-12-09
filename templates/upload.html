@@ -1,6 +1,6 @@
 {% block content %}
     {% if not current_user %}<script>window.location.href = "/login"</script>{% endif %}
-<form action="/upload" enctype="multipart/form-data" method="POST">
+<form action="/upload" enctype="multipart/form-data" method="POST" style="display: flex; flex-direction: column">
     <input type="file" name="track_file" accept=".mp3" required>
     <input type="file" name="track_cover" accept=".jpg,.jpeg,.png" required>
     <input type="text" name="track_name" required>
