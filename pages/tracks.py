@@ -27,6 +27,37 @@ async def upload_track_ui(request: Request):
 
     return request.app.state.templates.TemplateResponse(BASE_TEMPLATE, context)
 
+@track_router.get("/track/{track_id}", name="track_ui")
+async def track_ui(
+        request: Request,
+        track_id: int,
+        track_service: TracksService = Depends(tracks_service),
+        current_user: Optional[User] = Depends(get_current_user)
+):
+    current_user_id = current_user.id if current_user is not None else 0
+    tracks = track_service.selectByID(track_id, current_user_id)
+    track = tracks[0]
+
+    track["Contributors"] = json.loads(track["Contributors"])
+    upload_date_string = track["UploadDate"].split("-")
+    upload_date = datetime(int(upload_date_string[0]),
+                           int(upload_date_string[1]),
+                           int(upload_date_string[2]),
+                           int(upload_date_string[3]),
+                           int(upload_date_string[4]))
+    track["UploadDate"] = time_ago(upload_date)
+    track["liked"] = 'true'
+
+    template = "track.html"
+    context = {"request": request, "content_template": template, "track": track}
+
+    hx_request = request.headers.get("HX-Request")
+    if hx_request:
+        return request.app.state.templates.TemplateResponse(template, context)
+
+    return request.app.state.templates.TemplateResponse(BASE_TEMPLATE, context)
+
+
 @track_router.post("/upload", name="upload_post")
 async def upload(
     request: Request,

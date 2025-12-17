@@ -1,6 +1,6 @@
 from typing import List, Dict, Any
 import sqlite3
-from repositories.tracks import select_by_user, select_all_liked, add_liked, remove_liked, debug_select_all, select_by_text, insert
+from repositories.tracks import select_by_user, select_all_liked, add_liked, remove_liked, debug_select_all, select_by_text, insert, select_by_id
 import json
 from datetime import datetime
 from pages.tools import time_ago
@@ -11,6 +11,9 @@ class TracksService:
 
     def selectByUser(self, id, current_user_id) -> List[Dict[str, Any]]:
         return select_by_user(self.conn, id, current_user_id)
+
+    def selectByID(self, track_id, current_user_id) -> List[Dict[str, Any]]:
+        return select_by_id(self.conn, track_id, current_user_id)
 
     def selectAllLiked(self, user_id):
         tracks = select_all_liked(self.conn, user_id)

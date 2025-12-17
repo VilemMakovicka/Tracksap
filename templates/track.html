@@ -1,0 +1,63 @@
+
+
+{% set cover_image_src = "../static/images/default_track_cover.png" if track['TrackCoverPath'] == "" else ("../media/track_covers/" ~ track['TrackCoverPath']) %}
+<div class="track-container track-container-visible">
+    {% set cover_image_src = "../static/images/default_track_cover.png" if track['TrackCoverPath'] == "" else ("../media/track_covers/" ~ track['TrackCoverPath']) %}
+    <img class="track-cover-image" src="{{ cover_image_src }}" alt="Track cover"><br>
+    <button class="track-play-button" onclick="playSong('/stream/{{ track['AudioFilePath'] }}', {{ track['TrackID'] }})">
+        <img
+                src="{{ request.url_for('static', path='images/play.svg') }}"
+                id="play-button-image-{{ track['TrackID'] }}"
+                class="play-button-image"
+                onload="initializePlayButton('play-button-image-{{ track['TrackID'] }}', '{{track['AudioFilePath']}}')"
+        >
+    </button>
+    <div>
+        <div class="track-container-left">
+            <div>
+                <a class="track-title" href="/track/{{ track['TrackID'] }}">{{ track["Title"] }}</a>
+                <a>● Single ● {{ track['Length'] }}</a>
+            </div>
+            <div class="contributors-text">
+            {% for c in track.Contributors %}
+                <a hx-get="/user/{{ c['UserID'] }}" hx-target="#content" hx-push-url="true">{{ c["Username"] }}</a>
+                <a> {% if not loop.last %} ● {% endif %} </a>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="track-container-right">
+            <div style="position: relative;">
+                {% if current_user.role == "listener" or current_user.role == "artist" %}
+                    {% set liked_image_src = request.url_for('static', path='images/liked.svg') if track.liked == 'true' else request.url_for('static', path='images/unliked.svg') %}
+                    <button onclick="toggleLikedTrack({{ track["TrackID"] }})">
+                        <img src="{{ liked_image_src }}" id="button_liked_{{ track['TrackID'] }}">
+                    </button>
+                    <button onclick="">
+                            <img src="{{ request.url_for('static', path='images/playlist.svg') }}">
+                    </button>
+                {% endif %}
+                {% if current_user.role != "administrator" %}
+                <button onclick="toggleOverlayMenu('report-menu-{{ track["TrackID"] }}')">
+                        <img src="{{ request.url_for('static', path='images/report.svg') }}">
+                </button>
+                {% endif %}
+                <div class="overlay-menu overlay-menu-hidden" id="report-menu-{{ track["TrackID"] }}">
+                    <form
+                            action="/report/{{ track["TrackID"] }}"
+                            method="POST"
+                            style="display: flex; flex-direction: column;"
+                    >
+                        <input type="text" name="message" placeholder="message" required>
+                        <input type="submit" value="Report">
+                    </form>
+                </div>
+                {% if current_user.role == "administrator" %}
+                <button onclick="">
+                    <img src="{{ request.url_for('static', path='images/settings.svg') }}">
+                </button>
+                {% endif %}
+            </div>
+            <a>{{ track["UploadDate"] }}</a>
+        </div>
+    </div>
+</div>

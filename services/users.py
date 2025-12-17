@@ -25,7 +25,10 @@ class UsersService:
         return users_select(self.conn)
 
     def select_by_id(self, id) -> Dict[str, Any]:
-        return users_select_by_id(self.conn, id)
+        user = users_select_by_id(self.conn, id)
+        if user is None:
+            user = {"Username": "User not found"}
+        return user
 
     def insert_user(self, username: str, email: str, password: str):
         users_insert_user(self.conn, username, email, password)
