@@ -37,6 +37,13 @@ async def track_ui(
     current_user_id = current_user.id if current_user is not None else 0
     tracks = track_service.selectByID(track_id, current_user_id)
     track = tracks[0]
+    comments = track_service.selectCommentsByTrackID(track_id)
+    for comment in comments:
+        upload_date_string = comment["comment_date"].split("-")
+        upload_date = datetime(int(upload_date_string[0]),
+                               int(upload_date_string[1]),
+                               int(upload_date_string[2]))
+        comment["time_since"] = time_ago(upload_date)
 
     track["Contributors"] = json.loads(track["Contributors"])
     upload_date_string = track["UploadDate"].split("-")
@@ -49,7 +56,7 @@ async def track_ui(
     track["liked"] = 'true'
 
     template = "track.html"
-    context = {"request": request, "content_template": template, "track": track}
+    context = {"request": request, "content_template": template, "track": track, "comments": comments}
 
     hx_request = request.headers.get("HX-Request")
     if hx_request:
@@ -243,6 +250,17 @@ async def report_post(
 ):
     service.insertReport(track_id, message)
     return "reported"
+
+@track_router.post("/comment/{track_id}")
+async def comment_post(
+        request: Request,
+        track_id: str,
+        comment_content: str = Form(...),
+        service: TracksService = Depends(tracks_service),
+        current_user: Optional[User] = Depends(get_current_user)
+):
+    service.InsertComment(track_id, current_user.id, comment_content)
+    return "commented"
 
 @track_router.get("/stream/{audio_path}")
 async def stream_audio(audio_path, range: str = Header(None)):

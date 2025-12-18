@@ -1,6 +1,17 @@
 from typing import List, Dict, Any
 import sqlite3
-from repositories.tracks import select_by_user, select_all_liked, add_liked, remove_liked, debug_select_all, select_by_text, insert, select_by_id
+from repositories.tracks import (
+    select_by_user,
+    select_all_liked,
+    add_liked,
+    remove_liked,
+    debug_select_all,
+    select_by_text,
+    insert,
+    select_by_id,
+    select_comments_by_track_id,
+    insert_comment
+)
 import json
 from datetime import datetime
 from pages.tools import time_ago
@@ -14,6 +25,9 @@ class TracksService:
 
     def selectByID(self, track_id, current_user_id) -> List[Dict[str, Any]]:
         return select_by_id(self.conn, track_id, current_user_id)
+
+    def selectCommentsByTrackID(self, track_id) -> List[Dict[str, Any]]:
+        return select_comments_by_track_id(self.conn, track_id)
 
     def selectAllLiked(self, user_id):
         tracks = select_all_liked(self.conn, user_id)
@@ -33,6 +47,9 @@ class TracksService:
 
     def Insert(self, title: str, audio_file_path: str, track_cover_file_name: str, current_user_id, track_length: str):
         insert(self.conn, title, audio_file_path, track_cover_file_name, current_user_id, track_length)
+
+    def InsertComment(self, track_id: str, author_id: int, comment_content: str):
+        insert_comment(self.conn, track_id, author_id, comment_content)
 
     @staticmethod
     def format_tracks(tracks):

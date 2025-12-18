@@ -15,6 +15,10 @@ def create_app() -> FastAPI:
     app.state.templates = Jinja2Templates(directory="templates")
     app.state.templates.env.globals["get_current_user"] = get_current_user
 
+    app.state.templates.env.globals["role_administrator"] = "administrator"
+    app.state.templates.env.globals["role_artist"] = "artist"
+    app.state.templates.env.globals["role_listener"] = "listener"
+
     app.include_router(authentication_router, prefix="", tags=["authentication"])
     app.include_router(track_router, prefix="", tags=["tracks"])
     app.include_router(user_router, prefix="", tags=["users"])

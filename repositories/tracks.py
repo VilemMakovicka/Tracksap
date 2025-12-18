@@ -3,6 +3,25 @@ from datetime import datetime
 from typing import List, Dict, Any
 import sqlite3
 
+import sqlite3
+from datetime import datetime
+
+
+def insert_comment(conn: sqlite3.Connection, track_id: str, author_id: str, comment_content: str):
+    cursor = conn.cursor()
+
+    current_date = datetime.now().strftime("%Y-%m-%d")
+
+    sql = """
+          INSERT INTO "TrackComments"
+              ("TrackID", "AuthorID", "PostDate", "CommentContent")
+          VALUES (?, ?, ?, ?); 
+          """
+
+    cursor.execute(sql, (track_id, author_id, current_date, comment_content))
+
+    conn.commit()
+
 def select_by_user(conn: sqlite3.Connection, id, user_id) -> List[Dict[str, Any]]:
     rows = conn.execute(
         """WITH liked_tracks AS (
@@ -81,6 +100,19 @@ def select_by_id(conn: sqlite3.Connection, track_id, current_user_id) -> List[Di
             WHERE Tracks.ID = """ + str(track_id) + """	
             GROUP BY Tracks.ID;"""
     ).fetchall()
+    return [dict(r) for r in rows]
+
+def select_comments_by_track_id(conn: sqlite3.Connection, track_id) -> List[Dict[str, Any]]:
+    rows = conn.execute("""
+                        SELECT 
+                            TrackComments.AuthorID "author_id", 
+                            Users.Username "author_username", 
+                            Users.ProfilePicturePath "author_profile_picture_path", 
+                            TrackComments.CommentContent "comment_content", 
+                            TrackComments.PostDate "comment_date" 
+                        FROM TrackComments
+                                 JOIN Users ON TrackComments.AuthorID = Users.ID 
+                        WHERE TrackID = """ + str(track_id)).fetchall()
     return [dict(r) for r in rows]
 
 def select_all_liked(conn: sqlite3.Connection, user_id) -> List[Dict[str, Any]]:

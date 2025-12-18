@@ -1,0 +1,6 @@
+{% macro generate(track_id) %}
+    <form class="comment-form" method="post" action="/comment/{{ track_id }}">
+        <input type="text" placeholder="Write a comment..." name="comment_content" required>
+        <button type="submit">Send</button>
+    </form>
+{% endmacro %}

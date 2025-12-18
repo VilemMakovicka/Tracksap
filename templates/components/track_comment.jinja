@@ -1,0 +1,12 @@
+{% macro generate(comment) %}
+    <div class="comment">
+        <div>
+            <a href="/user/{{ comment["author_id"] }}">
+                {{ comment["author_username"] }} ● {{ comment["time_since"] }}
+            </a>
+        </div>
+        <div>
+            {{ comment["comment_content"] }}
+        </div>
+    </div>
+{% endmacro %}

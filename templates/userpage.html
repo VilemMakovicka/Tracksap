@@ -4,7 +4,7 @@
 
 {% if not user %}<script>window.location.href = "/error/usernotfound"</script>{% endif %}
 
-{% if user["UserRole"] == "listener" %}
+{% if user["UserRole"] == role_listener %}
     {% if current_user.id == user["ID"] %}
         <a>You don't have an artist profile.</a><br>
         <button onclick="changeProfileToArtist()">Change to an artist profile</button>
@@ -13,18 +13,12 @@
     {% endif %}
 {% endif %}
 
-{% if user["UserRole"] == "artist" %}
+{% if user["UserRole"] == role_artist %}
 <div class="user-profile-container">
     <div class="user-info-container">
-        {% if user['ProfilePicturePath'] is none %}
-        <img src="../static/images/default_profile_picture.png" class="image-profile" alt="Profile Picture">
-        {% else %}
-        <img src="../media/profile_pictures/{{ user['ProfilePicturePath'] }}" class="image-profile" alt="Profile Picture">
-        {% endif %}
+        {% set profile_image_src = "../static/images/default_profile_picture.png" if user['ProfilePicturePath'] is none else ("../media/profile_pictures/" ~ user['ProfilePicturePath']) %}
+        <img src="{{ profile_image_src }}" class="image-profile" alt="Profile Picture">
         <a class="user-profile-user-name">{{ user['Username'] }}</a>
-        {% if current_user.id == user["ID"] %}
-            <!--<button class="user-profile-user-settings" onclick="open_url('/user/usersettings')">Profile settings</button>-->
-        {% endif %}
         <ul>
             <li><a class="user-profile-user-tracks selected" href="/user/{{ user['ID'] }}/tracks">Tracks</a></li>
         </ul>

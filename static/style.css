@@ -7,6 +7,21 @@
 image{
 
 }
+.comment{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-radius: 0.3em;
+    background-color: #efefef;
+    background-image: linear-gradient(to top right, #2e2e2e, #575757);
+    transition: 0.4s;
+    box-shadow: 0 0 3px #0000008a;
+    padding: 5px;
+}
+.comment-form>input[type=text]{
+    width: 100%;
+    overflow: auto;
+}
 button, .button-esque{
     color: black;
     padding: 0.5em 1em;
@@ -108,6 +123,7 @@ input[type=text]::placeholder, input[type=password]::placeholder{
     font-family: 'league-spartan', serif;
     box-sizing: border-box;
     /*image-rendering: pixelated;*/
+    color: white;
 }
 
 .navbar{
@@ -330,6 +346,42 @@ form{
     transition: 0.4s;
     box-shadow: 0 0 3px #0000008a;
 }
+.track-container-expanded-controls{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.track-container-expanded-controls>button{
+    height: 100px;
+    padding: 20px 20px 20px 20px;
+}
+.track-container-expanded-cover-image{
+    height: 300px;
+    width: 300px;
+}
+.track-container-expanded{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.track-container-expanded-main{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 350px;
+    border-radius: 0.3em;
+    background-color: #efefef;
+    background-image: linear-gradient(to top right, #2e2e2e, #575757);
+    transition: 0.4s;
+    box-shadow: 0 0 3px #0000008a;
+    padding: 25px;
+    gap: 25px;
+}
+.track-container-expanded-comments{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 .track-container-hidden{
     max-height: 0;
     opacity: 0;
@@ -413,4 +465,10 @@ form{
 .track-container-right>a{
     color: #878787;
     font-size: 15px;
+}
+
+.comment>div>a[href]{
+    color: #878787;
+    font-size: 15px;
+    cursor: pointer;
 }
