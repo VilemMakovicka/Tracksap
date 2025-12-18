@@ -1,4 +1,7 @@
 {% block content %}
+    {% if error is not none %}
+        <a style="color: red">{{ error }}</a><br>
+    {% endif %}
 <a href="/register">Create a new account</a>
 <form action="/login" method="POST">
     <input type="text" name="email" placeholder="Email" required>

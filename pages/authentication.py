@@ -17,6 +17,7 @@ from services.authentication import AuthenticationService
 from dependencies import authentication_service, get_current_user
 import bcrypt
 import secrets
+from pages.config import BASE_TEMPLATE
 
 import database.database
 import repositories.users
@@ -82,10 +83,11 @@ async def login(
     user = auth_service.authenticate(email, password)
     if not user:
         return request.app.state.templates.TemplateResponse(
-            "login.html",
+            BASE_TEMPLATE,
             {
                 "request": request,
                 "error": "Invalid email or password",
+                "content_template": "login.html"
             },
             status_code=status.HTTP_401_UNAUTHORIZED,
         )
@@ -125,6 +127,36 @@ async def register_submit(
     user_service: UsersService = Depends(users_service),
     auth_service = Depends(authentication_service)
 ):
+    if len(username) < 3:
+        return request.app.state.templates.TemplateResponse(
+            BASE_TEMPLATE,
+            {
+                "request": request,
+                "error": "Username cannot be shorter than 3 characters",
+                "content_template": "register.html"
+            },
+            status_code=status.HTTP_401_UNAUTHORIZED,
+        )
+    if len(password) < 3:
+        return request.app.state.templates.TemplateResponse(
+            BASE_TEMPLATE,
+            {
+                "request": request,
+                "error": "Password cannot be shorter than 3 characters",
+                "content_template": "register.html"
+            },
+            status_code=status.HTTP_401_UNAUTHORIZED,
+        )
+    if len(email) < 3:
+        return request.app.state.templates.TemplateResponse(
+            BASE_TEMPLATE,
+            {
+                "request": request,
+                "error": "Password cannot be shorter than 3 characters",
+                "content_template": "register.html"
+            },
+            status_code=status.HTTP_401_UNAUTHORIZED,
+        )
     hashed_password = auth_service.hash_password(password)
     user_service.insert_user(username, email, hashed_password)
     # return login(request, email, password, auth_service)

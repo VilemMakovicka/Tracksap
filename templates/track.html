@@ -68,7 +68,7 @@
             </div>
         </div>
     <div class="track-container-expanded-comments">
-        {% if current_user is not none %}
+        {% if current_user is not none and current_user.role != "administrator" %}
             {{ track_comment_form.generate(track['TrackID']) }}
         {% endif %}
         {% for comment in comments %}

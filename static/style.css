@@ -351,6 +351,9 @@ form{
     display: flex;
     flex-direction: row;
 }
+.track-container-expanded-controls>div{
+    width: 100%;
+}
 .track-container-expanded-controls>button{
     height: 100px;
     padding: 20px 20px 20px 20px;
@@ -471,4 +474,112 @@ form{
     color: #878787;
     font-size: 15px;
     cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    form{
+        flex-direction: column;
+    }
+    .track-container-left>a, .track-container-left>div>a:last-child{
+        font-size: 12px;
+    }
+    .track-title{
+        font-size: 16px;
+    }
+    .contributors-text>a{
+        font-size: 12px;
+    }
+    .track-container-right>a{
+        font-size: 12px;
+    }
+    .track-container-left>div:nth-child(1){
+        flex-direction: column;
+        display: flex;
+    }
+    .navbar{
+        flex-direction: column;
+        gap: 10px;
+        height: max-content;
+    }
+    .navbar>div>img{
+        width: 100%;
+    }
+    .nav-right{
+        height: 50px;
+    }
+    .nav-right>button{
+        width: 40px;
+        height: 40px;
+    }
+    .nav-right>button>image{
+        width: 40px;
+        height: 40px;
+    }
+    .track-container-expanded-main{
+        flex-direction: column;
+        height: fit-content;
+        align-items: center;
+    }
+    .track-cover-image{
+        height: auto;
+    }
+    .track-container-expanded-cover-image>.track-cover-image{
+        width: 100%;
+        height: auto;
+    }
+    .track-container-expanded-cover-image{
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+    }
+    .track-container-expanded-controls>button{
+        padding: 8px;
+        height: 30px;
+        width: 30px;
+    }
+    .track-container-expanded-controls>button>img{
+        height: 15px;
+        width: 15px;
+        margin: 0;
+    }
+    .track-container-right{
+        flex-direction: row-reverse;
+        justify-content: space-between;
+    }
+    .overlay-menu{
+        width: 200px;
+    }
+    .user-profile-container{
+        flex-direction: column;
+    }
+    .user-info-container{
+        flex-direction: column;
+        align-items: center;
+        margin: auto;
+    }
+    .user-profile-filter-bar{
+        height: auto;
+    }
+    .user-profile-filter-bar>div{
+        flex-direction: column;
+        width: 100%;
+    }
+    .user-profile-filter-bar>div>button{
+        width: 100%;
+    }
+    .user-profile-filter-bar>div>input>{
+        width: 100%;
+    }
+    .menu-box-user{
+              width: auto;
+    }
+    button{
+        font-size: 10px;
+    }
+    .nav-right>button{
+        font-size: 20px;
+    }
+    .library-content{
+        flex-direction: column;
+    }
 }

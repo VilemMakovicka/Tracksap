@@ -27,14 +27,20 @@
             <div class="nav-left">
                 <img src="{{ request.url_for('static', path='images/headerlogo.png') }}" onclick="open_url('/discover')">
             </div>
-            {% if current_user %}
             <div class="nav-center">
-                <a class="{% if '/library' in request.path %}selected{% endif %} button-esque"
-                   hx-get="/library/liked" hx-target="#content" hx-push-url="true">LIBRARY</a>
-                <a class="{% if request.path == '/discover' %}selected{% endif %} button-esque"
-                   hx-get="/discover" hx-target="#content" hx-push-url="true">DISCOVER</a>
+                {% if current_user and current_user.role != "administrator" %}
+                    <a class="{% if '/library' in request.path %}selected{% endif %} button-esque"
+                       hx-get="/library/liked" hx-target="#content" hx-push-url="true">LIBRARY</a>
+                    <a class="{% if request.path == '/discover' %}selected{% endif %} button-esque"
+                       hx-get="/discover" hx-target="#content" hx-push-url="true">DISCOVER</a>
+                {% endif %}
+                {% if current_user.role == "administrator" %}
+                    <a class="{% if request.path == '/discover' %}selected{% endif %} button-esque"
+                       hx-get="/discover" hx-target="#content" hx-push-url="true">DISCOVER</a>
+                    <a class="{% if request.path == '/administration' %}selected{% endif %} button-esque"
+                       hx-get="/administration" hx-target="#content" hx-push-url="true">ADMINISTRATION</a>
+                {% endif %}
             </div>
-            {% endif %}
             <div class="nav-right">
                 <!--<img src="{{ request.url_for('static', path='images/search.svg') }}">
                 <img src="{{ request.url_for('static', path='images/user.svg') }}" onclick="openLogin()">-->
@@ -82,19 +88,24 @@
 
                         {% set profile_picture_src = request.url_for('media', path=('profile_pictures/' ~ current_user.profile_picture_path )) if current_user.profile_picture_path else request.url_for('static', path='images/default_profile_picture.png') %}
                         <img src="{{ profile_picture_src }}" class="image-profile-compact" alt="Profile Picture">
+
                         <div style="display: flex; flex-direction: column; width: 100%;">
                             <a class="user-profile-user-name" style="height: 50%">{{ current_user.username }}</a>
+                            {% if current_user.role != "administrator" %}
                             <div style="display: flex; flex-direction: row; width: 100%; height: 50%; gap: 10px; padding-top: 5px;">
                                 <button style="width: 100%;" onclick="openprofile({{ current_user.id }})">My profile</button>
                                 <button style="height: 100%; aspect-ratio: 1; padding: 5px" onclick="open_url('/user/usersettings')">
                                     <img src="{{ request.url_for('static', path='images/settings.svg') }}">
                                 </button>
                             </div>
+                            {% endif %}
                         </div>
-                    </div>
 
+                    </div>
+                    {% if current_user.role != "administrator" %}
                     <script> async function openuploadform() { window.location.href = "/upload";}</script>
                     <button onclick="openuploadform()">Upload a track</button>
+                    {% endif %}
                     <script> async function logout() { await fetch(`/logout`, { method: "POST" }); location.reload();} </script>
                     <button onclick="logout()">Logout</button>
                     {% endif %}
